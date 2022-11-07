@@ -148,4 +148,26 @@ public class MobileWalletController {
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/count/documentNumber/{documentNumber}")
+    public Mono<ResponseEntity<Long>> getCantMobileWalletBalanceByDocumentNumber(@PathVariable("documentNumber") String documentNumber) {
+        return service.findBalanceByDocumentNumber(documentNumber)
+                .collectList()
+                .map(c -> ResponseEntity
+                        .ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(c.stream().count()))
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/first/documentNumber/{documentNumber}")
+    public Mono<ResponseEntity<MobileWallet>> getFirstMobileWalletBalanceByDocumentNumber(@PathVariable("documentNumber") String documentNumber) {
+        return service.findBalanceByDocumentNumber(documentNumber)
+                .collectList()
+                .map(c -> ResponseEntity
+                        .ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(c.get(0)))
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
 }
